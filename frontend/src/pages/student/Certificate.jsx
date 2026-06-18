@@ -41,7 +41,7 @@ const Certificate = () => {
 
     const studentName = user?.name || "Student";
     const courseTitle = courseDetails?.title || "Course";
-    const instructor = courseDetails?.creator?.name || "EduSkill Instructor";
+    const instructor = courseDetails?.creator?.name || "EduTrack Instructor";
     const date = new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
     const certId = `EDU-${(courseId || "").slice(-6).toUpperCase()}-${(user?._id || "").slice(-6).toUpperCase()}`;
 
@@ -75,7 +75,7 @@ const Certificate = () => {
                                 <Award size={32} className="text-[#f8fafc]" />
                             </div>
                             <span className="font-black text-2xl tracking-tighter text-[#0f172a]">
-                                EduSkill
+                                EduTrack
                             </span>
                         </div>
 
