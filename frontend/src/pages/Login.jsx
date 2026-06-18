@@ -69,7 +69,7 @@ const Login = () => {
                             <GraduationCap size={28} className="text-white" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-black tracking-tight">EduLearn</h1>
+                            <h1 className="text-2xl font-black tracking-tight">EduSkill</h1>
                             <p className="text-white/60 text-sm font-medium">Learning Platform</p>
                         </div>
                     </div>
@@ -80,7 +80,7 @@ const Login = () => {
                         <span className="text-white/80">Shape Your Future</span>
                     </h2>
                     <p className="text-white/65 text-lg leading-relaxed mb-10">
-                        Join thousands of learners mastering new skills and advancing their careers with EduLearn.
+                        Join thousands of learners mastering new skills and advancing their careers with EduSkill.
                     </p>
 
                     {}
@@ -115,7 +115,7 @@ const Login = () => {
                         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-purple-600 shadow-lg shadow-primary/30 mb-3">
                             <GraduationCap size={26} className="text-white" />
                         </div>
-                        <h1 className="text-2xl font-black gradient-text">EduLearn</h1>
+                        <h1 className="text-2xl font-black gradient-text">EduSkill</h1>
                     </div>
 
                     <div>

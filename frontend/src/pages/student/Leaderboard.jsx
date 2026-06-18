@@ -31,7 +31,7 @@ const Leaderboard = () => {
                         Global Leaderboard
                     </h1>
                     <p className="text-lg text-muted-foreground font-medium">
-                        The most dedicated learners on EduLearn. Earn XP by completing courses and helping others!
+                        The most dedicated learners on EduSkill. Earn XP by completing courses and helping others!
                     </p>
                 </div>
 

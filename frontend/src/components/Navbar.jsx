@@ -52,7 +52,7 @@ const Navbar = () => {
                         <GraduationCap size={18} className="text-white" />
                     </div>
                     <span className="font-black text-xl bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent tracking-tight">
-                        EduLearn
+                        EduSkill
                     </span>
                 </button>
 
@@ -212,7 +212,7 @@ const Navbar = () => {
                     <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
                         <GraduationCap size={16} className="text-white" />
                     </div>
-                    <span className="font-black text-lg bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">EduLearn</span>
+                    <span className="font-black text-lg bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">EduSkill</span>
                 </button>
                 <div className="flex items-center gap-2">
                     <DarkMode />
@@ -242,7 +242,7 @@ const MobileNavbar = ({ user, isAuthenticated, onLogout }) => {
                         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-md">
                             <GraduationCap size={18} className="text-white" />
                         </div>
-                        <span className="font-black text-xl bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">EduLearn</span>
+                        <span className="font-black text-xl bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">EduSkill</span>
                     </SheetTitle>
                 </SheetHeader>
                 <div className="px-4 py-5">
