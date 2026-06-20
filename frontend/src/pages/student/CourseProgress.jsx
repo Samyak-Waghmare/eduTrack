@@ -61,9 +61,10 @@ const CourseProgress = () => {
     };
 
     const handleMarkComplete = async () => {
-        await markComplete(courseId);
+        if (!currentLecture) return;
+        await updateProgress({ courseId, lectureId: currentLecture._id, viewed: true });
         refetch();
-        toast.success("🎉 Course completed! You've earned your certificate.");
+        toast.success("Lecture marked as complete!");
     };
 
     const handleMarkIncomplete = async () => {
@@ -191,9 +192,11 @@ const CourseProgress = () => {
                                             <Button
                                                 size="sm"
                                                 onClick={handleMarkComplete}
-                                                className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold h-10 px-4 border-0"
+                                                disabled={isViewed(currentLecture?._id)}
+                                                className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold h-10 px-4 border-0 disabled:opacity-50"
                                             >
-                                                <CheckCircle size={16} /> Mark Complete
+                                                <CheckCircle size={16} />
+                                                {isViewed(currentLecture?._id) ? "Completed" : "Mark Complete"}
                                             </Button>
                                         )}
                                     </div>
