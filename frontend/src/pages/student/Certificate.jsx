@@ -98,59 +98,62 @@ const Certificate = () => {
             <div className="max-w-[900px] mx-auto">
                 <div
                     ref={certRef}
-                    className="relative bg-[#ffffff] text-[#1e293b] overflow-hidden aspect-[1.414/1] flex flex-col justify-center"
-                    style={{ border: "12px double #0f172a" }}
+                    style={{
+                        position: "relative",
+                        backgroundColor: "#ffffff",
+                        color: "#1e293b",
+                        overflow: "hidden",
+                        aspectRatio: "1.414/1",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        border: "12px double #0f172a",
+                    }}
                 >
-                    {/* Subtle texture */}
-                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-                        style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/cubes.png')" }} />
+                    {/* Corner accents using inline rgba to avoid oklch */}
+                    <div style={{ position:"absolute", top:0, left:0, width:192, height:192, background:"radial-gradient(circle at top left, rgba(124,58,237,0.08), transparent 70%)", pointerEvents:"none" }} />
+                    <div style={{ position:"absolute", bottom:0, right:0, width:192, height:192, background:"radial-gradient(circle at bottom right, rgba(14,165,233,0.08), transparent 70%)", pointerEvents:"none" }} />
 
-                    {/* Corner accents */}
-                    <div className="absolute top-0 left-0 w-48 h-48 bg-gradient-to-br from-[#7c3aed]/10 to-transparent rounded-br-[100%]" />
-                    <div className="absolute bottom-0 right-0 w-48 h-48 bg-gradient-to-tl from-[#0ea5e9]/10 to-transparent rounded-tl-[100%]" />
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#1e293b]/5 to-transparent rounded-bl-[100%]" />
-                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-[#1e293b]/5 to-transparent rounded-tr-[100%]" />
-
-                    <div className="relative px-16 py-10 text-center">
+                    <div style={{ position:"relative", padding:"40px 80px", textAlign:"center" }}>
                         {/* Logo */}
-                        <div className="flex flex-col items-center justify-center gap-3 mb-6">
-                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0f172a] to-[#334155] flex items-center justify-center shadow-lg" style={{ transform: "rotate(3deg)" }}>
-                                <Award size={32} className="text-[#f8fafc]" />
+                        <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:12, marginBottom:24 }}>
+                            <div style={{ width:64, height:64, borderRadius:16, background:"linear-gradient(135deg, #0f172a, #334155)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 16px rgba(0,0,0,0.2)", transform:"rotate(3deg)" }}>
+                                <Award size={32} color="#f8fafc" />
                             </div>
-                            <span className="font-black text-2xl tracking-tighter text-[#0f172a]">EduTrack</span>
+                            <span style={{ fontWeight:900, fontSize:22, letterSpacing:"-0.05em", color:"#0f172a" }}>EduTrack</span>
                         </div>
 
-                        <p className="uppercase tracking-[0.4em] text-sm text-[#64748b] font-bold mb-6">Certificate of Completion</p>
+                        <p style={{ textTransform:"uppercase", letterSpacing:"0.4em", fontSize:13, color:"#64748b", fontWeight:700, marginBottom:24 }}>Certificate of Completion</p>
 
-                        <p className="text-[#475569] text-base font-medium italic">This is proudly presented to</p>
-                        <h1 className="text-5xl font-black my-4 text-[#0f172a] tracking-tight" style={{ fontFamily: "Georgia, serif" }}>
+                        <p style={{ color:"#475569", fontSize:15, fontStyle:"italic", fontWeight:500 }}>This is proudly presented to</p>
+                        <h1 style={{ fontSize:52, fontWeight:900, margin:"16px 0", color:"#0f172a", letterSpacing:"-0.03em", fontFamily:"Georgia, serif" }}>
                             {studentName}
                         </h1>
 
-                        <p className="text-[#475569] text-base max-w-2xl mx-auto font-medium leading-relaxed mt-3">
+                        <p style={{ color:"#475569", fontSize:15, maxWidth:560, margin:"12px auto 0", fontWeight:500, lineHeight:1.6 }}>
                             for successfully demonstrating exceptional skill and completing the online course
                         </p>
-                        <h2 className="text-2xl font-bold mt-3 text-[#7c3aed] leading-tight max-w-3xl mx-auto">
+                        <h2 style={{ fontSize:24, fontWeight:700, marginTop:12, color:"#7c3aed", lineHeight:1.4 }}>
                             {courseTitle}
                         </h2>
 
-                        {/* Footer row */}
-                        <div className="flex items-end justify-between mt-10 pt-6 border-t-2 border-[#e2e8f0]">
-                            <div className="text-center w-44">
-                                <p className="font-bold text-[#0f172a] text-lg border-b border-[#cbd5e1] pb-2 mb-2">{date}</p>
-                                <p className="text-[10px] text-[#64748b] uppercase tracking-widest font-bold">Issue Date</p>
+                        {/* Footer */}
+                        <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between", marginTop:40, paddingTop:24, borderTop:"2px solid #e2e8f0" }}>
+                            <div style={{ textAlign:"center", width:160 }}>
+                                <p style={{ fontWeight:700, color:"#0f172a", fontSize:17, borderBottom:"1px solid #cbd5e1", paddingBottom:8, marginBottom:8 }}>{date}</p>
+                                <p style={{ fontSize:10, color:"#64748b", textTransform:"uppercase", letterSpacing:"0.12em", fontWeight:700 }}>Issue Date</p>
                             </div>
 
-                            <div className="text-center flex flex-col items-center">
-                                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-2 border border-amber-200">
-                                    <Sparkles size={20} className="text-amber-500" />
+                            <div style={{ textAlign:"center", display:"flex", flexDirection:"column", alignItems:"center" }}>
+                                <div style={{ width:48, height:48, borderRadius:"50%", backgroundColor:"#fef3c7", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:8, border:"1px solid #fde68a" }}>
+                                    <Sparkles size={20} color="#f59e0b" />
                                 </div>
-                                <p className="font-mono text-xs text-[#94a3b8] tracking-widest">{certId}</p>
+                                <p style={{ fontFamily:"monospace", fontSize:11, color:"#94a3b8", letterSpacing:"0.1em" }}>{certId}</p>
                             </div>
 
-                            <div className="text-center w-44">
-                                <p className="text-3xl text-[#0f172a] border-b border-[#cbd5e1] pb-2 mb-2 italic" style={{ fontFamily: "'Brush Script MT', cursive" }}>{instructor}</p>
-                                <p className="text-[10px] text-[#64748b] uppercase tracking-widest font-bold">Lead Instructor</p>
+                            <div style={{ textAlign:"center", width:160 }}>
+                                <p style={{ fontSize:30, color:"#0f172a", borderBottom:"1px solid #cbd5e1", paddingBottom:8, marginBottom:8, fontStyle:"italic", fontFamily:"'Brush Script MT', cursive" }}>{instructor}</p>
+                                <p style={{ fontSize:10, color:"#64748b", textTransform:"uppercase", letterSpacing:"0.12em", fontWeight:700 }}>Lead Instructor</p>
                             </div>
                         </div>
                     </div>
