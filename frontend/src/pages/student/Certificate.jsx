@@ -59,6 +59,13 @@ const Certificate = () => {
                 useCORS: true,
                 backgroundColor: "#ffffff",
                 logging: false,
+                onclone: (clonedDoc) => {
+                    // Strip all stylesheets — Tailwind uses oklch which html2canvas can't parse.
+                    // The certificate uses only inline styles so removing global CSS has no effect.
+                    clonedDoc.querySelectorAll('link[rel="stylesheet"], style').forEach(el => el.remove());
+                    clonedDoc.documentElement.style.background = "#ffffff";
+                    clonedDoc.body.style.background = "#ffffff";
+                },
             });
 
             const imgData = canvas.toDataURL("image/jpeg", 1.0);
