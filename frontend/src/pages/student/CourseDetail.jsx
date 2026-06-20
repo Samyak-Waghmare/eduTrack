@@ -40,6 +40,16 @@ const CourseDetail = () => {
         </div>
     );
 
+    if (!data || !data.course) return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-destructive/10 flex items-center justify-center">
+                <BookOpen size={28} className="text-destructive" />
+            </div>
+            <p className="font-bold text-lg">Course not found</p>
+            <Button variant="outline" onClick={() => navigate(-1)} className="rounded-xl">Go Back</Button>
+        </div>
+    );
+
     const { course, purchased } = data;
     const levelConfig = {
         "Beginner": { cls: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25", dot: "bg-emerald-500" },
