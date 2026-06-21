@@ -14,23 +14,44 @@ const fakeUsersData = [
     { name: "Emily Stone", email: "emily.s@example.com", photoUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emily" },
     { name: "David Kim", email: "david.k@example.com", photoUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=David" },
     { name: "Jessica Taylor", email: "jessica.t@example.com", photoUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jessica" },
+    { name: "Marcus Johnson", email: "marcus.j@example.com", photoUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus" },
+    { name: "Priya Patel", email: "priya.p@example.com", photoUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Priya" },
+    { name: "Omar Farooq", email: "omar.f@example.com", photoUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Omar" },
+    { name: "Elena Rodriguez", email: "elena.r@example.com", photoUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Elena" }
 ];
 
-const fakeReviews = [
-    "This course was exactly what I needed! The concepts were explained perfectly.",
-    "Highly recommended! The instructor is very knowledgeable and the pacing is great.",
-    "I've learned so much from this. The practical examples were the best part.",
-    "Great content, but I wish some sections went a bit deeper. Still a solid 4 stars.",
-    "Absolutely brilliant. Worth every penny. I can't wait to apply these skills.",
-    "Very well structured and easy to follow. Perfect for beginners.",
-    "The quality of the video and audio is top-notch. Great learning experience.",
-    "A bit fast-paced for me, but the provided resources helped a lot to catch up."
+const realisticReviews = [
+    // Positive but realistic
+    "Really solid course. The instructor clearly knows what they're talking about, though a few sections dragged a bit. Overall, definitely worth the money.",
+    "I took this over the weekend and was surprised by how much I picked up. The exercises are pretty well thought out.",
+    "Not bad at all. I had some background knowledge going in, but this helped fill in the gaps perfectly.",
+    "Great stuff. The audio quality could be a tiny bit better in the earlier videos, but the content makes up for it.",
+    "This was exactly what my boss wanted me to learn. Straight to the point, no fluff.",
+    "Honestly one of the better courses I've found on this topic. It doesn't waste your time.",
+    "I was skeptical at first, but the final project really tied everything together for me.",
+    "Solid 4.5/5. The instructor's voice is super clear and easy to follow. A few more real-world examples would make it perfect.",
+    "Good pacing for the most part. The advanced section ramped up quickly, but rewatching it cleared things up.",
+    "Finally, a course that actually explains the 'why' and not just the 'how'. Highly recommend.",
+    "I've bought a few courses on this subject before and gave up. This one finally made it click for me.",
+    "Pretty good! I ran into a bug on chapter 3, but found the fix in the Q&A section quickly.",
+    "The quality is fantastic. You can tell a lot of effort went into the curriculum design.",
+    "Worth the price just for the downloadable resources alone. Very helpful reference material.",
+    "I normally don't leave reviews, but this really helped me land my first junior role. Thanks!",
+    "It's a dense course. You definitely need to pause and practice, but the payoff is huge.",
+    "Very straightforward and practical. No unnecessary theory, just pure application.",
+    "Loved the section on best practices. I've been doing things the hard way for months.",
+    "Clear, concise, and professional. Everything worked exactly as shown in the videos.",
+    "A great refresher. I skimmed the basics and jumped straight into the projects."
 ];
 
 const seedReviews = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI);
         console.log("Connected to MongoDB");
+
+        // Clear existing reviews so we can start fresh
+        await Review.deleteMany({});
+        console.log("Cleared old duplicate reviews.");
 
         // 1. Create fake users
         const password = await bcrypt.hash("password123", 10);
@@ -48,24 +69,37 @@ const seedReviews = async () => {
         const courses = await Course.find();
         console.log(`Found ${courses.length} courses`);
 
-        // 3. Seed reviews
+        // 3. Seed new realistic reviews
         let totalReviewsAdded = 0;
-        for (const course of courses) {
-            const existingReviews = await Review.find({ course: course._id });
-            if (existingReviews.length > 0) {
-                console.log(`Course ${course.title} already has reviews. Skipping.`);
-                continue;
-            }
+        // Keep track of used reviews so we don't repeat them too often
+        let usedReviews = new Set();
 
-            // Assign 3 to 6 random reviews
-            const numReviews = Math.floor(Math.random() * 4) + 3;
+        for (const course of courses) {
+            // Assign 4 to 8 random reviews per course
+            const numReviews = Math.floor(Math.random() * 5) + 4;
             // Shuffle users
-            const shuffledUsers = fakeUsers.sort(() => 0.5 - Math.random());
+            const shuffledUsers = [...fakeUsers].sort(() => 0.5 - Math.random());
             
-            for (let i = 0; i < numReviews; i++) {
+            for (let i = 0; i < numReviews && i < shuffledUsers.length; i++) {
                 const user = shuffledUsers[i];
-                const rating = Math.random() > 0.8 ? 4 : 5; // Mostly 5 stars, some 4 stars
-                const comment = fakeReviews[Math.floor(Math.random() * fakeReviews.length)];
+                
+                // Add some realistic rating variance (mostly 4 and 5)
+                let rating;
+                const rand = Math.random();
+                if (rand > 0.6) rating = 5;
+                else if (rand > 0.2) rating = 4;
+                else rating = 3;
+
+                // Pick a review we haven't used recently
+                let commentIndex;
+                do {
+                    commentIndex = Math.floor(Math.random() * realisticReviews.length);
+                } while (usedReviews.has(commentIndex) && usedReviews.size < realisticReviews.length);
+                
+                usedReviews.add(commentIndex);
+                if (usedReviews.size >= realisticReviews.length) usedReviews.clear(); // reset when all used
+
+                const comment = realisticReviews[commentIndex];
 
                 await Review.create({
                     user: user._id,
@@ -75,10 +109,10 @@ const seedReviews = async () => {
                 });
                 totalReviewsAdded++;
             }
-            console.log(`Added reviews for: ${course.title}`);
+            console.log(`Added diverse reviews for: ${course.title}`);
         }
 
-        console.log(`Successfully added ${totalReviewsAdded} fake reviews!`);
+        console.log(`Successfully added ${totalReviewsAdded} realistic fake reviews!`);
         process.exit(0);
     } catch (error) {
         console.error("Error seeding reviews:", error);
