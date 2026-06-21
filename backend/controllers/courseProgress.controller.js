@@ -207,12 +207,23 @@ export const markAsInCompleted = async (req, res) => {
             return res.status(404).json({ message: "Course progress not found", success: false });
         }
 
+        let xpToSubtract = 0;
+        if (courseProgress.completed) xpToSubtract += 200;
+        courseProgress.lectureProgress.forEach((lp) => {
+            if (lp.viewed) xpToSubtract += 50;
+        });
+
         courseProgress.lectureProgress = courseDetails.lectures.map(lecture => ({
             lectureId: lecture._id.toString(),
             viewed: false
         }));
         courseProgress.completed = false;
         await courseProgress.save();
+
+        if (xpToSubtract > 0) {
+            await User.findByIdAndUpdate(userId, { $inc: { xp: -xpToSubtract } });
+        }
+
         return res.status(200).json({ message: "Course marked as incomplete.", success: true });
     } catch (error) {
 

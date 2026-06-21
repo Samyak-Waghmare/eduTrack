@@ -392,6 +392,16 @@ export const togglePublishCourse = async (req, res) => {
             success: false
         });
     }
+
+    if (publish === "true") {
+        if (!course.lectures || course.lectures.length === 0) {
+            return res.status(400).json({
+                message: "Cannot publish a course with no lectures.",
+                success: false
+            });
+        }
+    }
+
     course.isPublished = publish === "true";
     await course.save();
 

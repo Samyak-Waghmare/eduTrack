@@ -62,7 +62,7 @@ const EditCourse = () => {
         formData.append("description", description);
         formData.append("category", category);
         formData.append("level", level);
-        formData.append("price", price);
+        formData.append("price", price ? Number(price) : 0);
         if (thumbnail) formData.append("courseThumbnail", thumbnail);
 
         try {
