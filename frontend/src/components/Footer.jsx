@@ -4,6 +4,15 @@ import { GraduationCap, Twitter, Github, Linkedin, Instagram, Mail } from "lucid
 const Footer = () => {
     const navigate = useNavigate()
 
+    const scrollTo = (id) => {
+        if (window.location.pathname !== '/') {
+            navigate('/');
+            setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 150);
+        } else {
+            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     const links = {
         Platform: [
             { label: "Browse Courses", path: "/course/search" },
@@ -12,9 +21,9 @@ const Footer = () => {
             { label: "Become an Instructor", path: "/instructor" },
         ],
         Company: [
-            { label: "About Us", action: () => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" }) },
-            { label: "Features", action: () => document.getElementById("features")?.scrollIntoView({ behavior: "smooth" }) },
-            { label: "Contact", action: () => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }) },
+            { label: "About Us", action: () => scrollTo("about") },
+            { label: "Features", action: () => scrollTo("features") },
+            { label: "Contact", action: () => scrollTo("contact") },
         ],
         Legal: [
             { label: "Privacy Policy" },
