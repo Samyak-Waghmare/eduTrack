@@ -49,7 +49,16 @@ const StudentLayout = () => (
 )
 
 const AppContent = () => {
-  useLoadUserQuery()
+  const { isLoading } = useLoadUserQuery()
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
+
   return <RouterProvider router={appRouter} />
 }
 
