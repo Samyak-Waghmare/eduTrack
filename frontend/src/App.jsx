@@ -20,6 +20,7 @@ import PrivacyPolicy from './pages/student/PrivacyPolicy'
 import TermsOfService from './pages/student/TermsOfService'
 import Footer from './components/Footer'
 import { ThemeProvider } from './components/ThemeProvider'
+import ScrollToTop from './components/ScrollToTop'
 import ProtectedRoute from './components/ProtectedRoute'
 import PurchaseCourseProtectedRoute from './components/PurchaseCourseProtectedRoute'
 import Dashboard from './pages/instructor/Dashboard'
@@ -36,6 +37,7 @@ import QADashboard from './pages/instructor/QADashboard'
 
 const MainLayout = () => (
   <div className="min-h-screen bg-background flex flex-col">
+    <ScrollToTop />
     <Navbar />
     <div className="pt-16 flex-1">
       <Outlet />

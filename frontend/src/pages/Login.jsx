@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Loader2, GraduationCap, Lock, Mail, User, Eye, EyeOff, Sparkles, CheckCircle } from "lucide-react"
 import { useRegisterUserMutation, useLoginUserMutation } from "@/features/api/authApi"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 
 const perks = [
@@ -246,9 +246,9 @@ const Login = () => {
 
                     <p className="text-center text-xs text-muted-foreground pt-2">
                         By signing up, you agree to our{" "}
-                        <span className="text-primary font-semibold cursor-pointer hover:underline">Terms of Service</span>{" "}
-                        and{" "}
-                        <span className="text-primary font-semibold cursor-pointer hover:underline">Privacy Policy</span>
+                        <Link to="/terms-of-service" className="text-primary font-semibold hover:underline">Terms of Service</Link>
+                        {" "}and{" "}
+                        <Link to="/privacy-policy" className="text-primary font-semibold hover:underline">Privacy Policy</Link>
                     </p>
                 </div>
             </div>
