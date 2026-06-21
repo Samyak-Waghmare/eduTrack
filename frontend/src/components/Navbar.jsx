@@ -36,6 +36,22 @@ const Navbar = () => {
 
     const isActive = (path) => location.pathname === path;
 
+    const scrollTo = (id) => {
+        if (location.pathname !== '/') {
+            navigate('/');
+            setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 150);
+        } else {
+            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    const publicNavLinks = [
+        { label: 'Home', action: () => navigate('/') },
+        { label: 'Features', action: () => scrollTo('features') },
+        { label: 'About', action: () => scrollTo('about') },
+        { label: 'Contact', action: () => scrollTo('contact') },
+    ];
+
     return (
         <nav className={`h-16 fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
             scrolled 
@@ -56,8 +72,8 @@ const Navbar = () => {
                     </span>
                 </button>
 
-                {}
-                {isAuthenticated && (
+                {/* Nav links */}
+                {isAuthenticated ? (
                     <div className="flex items-center gap-1">
                         <Link
                             to="/course/search"
@@ -93,6 +109,18 @@ const Navbar = () => {
                                 Admin Panel
                             </Link>
                         )}
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-1">
+                        {publicNavLinks.map(({ label, action }) => (
+                            <button
+                                key={label}
+                                onClick={action}
+                                className="px-4 py-2 rounded-xl text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200"
+                            >
+                                {label}
+                            </button>
+                        ))}
                     </div>
                 )}
 

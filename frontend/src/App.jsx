@@ -12,6 +12,10 @@ import SearchPage from './pages/student/SearchPage'
 import PaymentSuccess from './pages/student/PaymentSuccess'
 import Certificate from './pages/student/Certificate'
 import Leaderboard from './pages/student/Leaderboard'
+import FeaturesSection from './pages/student/FeaturesSection'
+import AboutSection from './pages/student/AboutSection'
+import ContactSection from './pages/student/ContactSection'
+import Footer from './components/Footer'
 import { ThemeProvider } from './components/ThemeProvider'
 import ProtectedRoute from './components/ProtectedRoute'
 import PurchaseCourseProtectedRoute from './components/PurchaseCourseProtectedRoute'
@@ -28,11 +32,12 @@ import Portfolio from './pages/student/Portfolio'
 import QADashboard from './pages/instructor/QADashboard'
 
 const MainLayout = () => (
-  <div className="min-h-screen bg-background">
+  <div className="min-h-screen bg-background flex flex-col">
     <Navbar />
-    <div className="pt-16">
+    <div className="pt-16 flex-1">
       <Outlet />
     </div>
+    <Footer />
   </div>
 )
 
@@ -71,7 +76,10 @@ const appRouter = createBrowserRouter([
         element: (
           <>
             <HeroSection />
+            <FeaturesSection />
             <Courses />
+            <AboutSection />
+            <ContactSection />
           </>
         )
       },
