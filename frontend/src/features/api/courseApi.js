@@ -18,11 +18,11 @@ export const courseApi = createApi({
             invalidatesTags: ["Refetch_Creator_Course"]
         }),
         getSearchCourse: builder.query({
-            query: ({ searchQuery, categories, level, sortByPrice, page = 1 }) => {
+            query: ({ searchQuery, categories, levels, sortByPrice, page = 1 }) => {
                 const params = new URLSearchParams()
                 if (searchQuery) params.append("query", searchQuery)
                 if (categories?.length) categories.forEach(c => params.append("categories", c))
-                if (level?.length) level.forEach(l => params.append("level", l))
+                if (levels?.length) levels.forEach(l => params.append("level", l))
                 if (sortByPrice) params.append("sortByPrice", sortByPrice)
                 params.append("page", page)
 

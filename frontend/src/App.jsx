@@ -103,11 +103,11 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "/leaderboard",
-        element: <ProtectedRoute><Leaderboard /></ProtectedRoute>
+        element: <Leaderboard />
       },
       {
         path: "/course-detail/:courseId",
-        element: <ProtectedRoute><CourseDetail /></ProtectedRoute>
+        element: <CourseDetail />
       },
       {
         path: "/payment-success",
@@ -174,6 +174,7 @@ const appRouter = createBrowserRouter([
       <ProtectedRoute>
         <PurchaseCourseProtectedRoute>
           <div className="min-h-screen bg-background">
+            <ScrollToTop />
             <Navbar />
             <div className="pt-16">
               <CourseProgress />
