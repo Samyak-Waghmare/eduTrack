@@ -4,14 +4,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Loader2, Camera, BookOpen, Award, User, Shield, Edit3, Mail } from "lucide-react"
+import { Loader2, Camera, BookOpen, Award, Shield, Edit3, Mail, ExternalLink } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { toast } from "sonner"
+import { useNavigate } from "react-router-dom"
 import Course from "./Course"
 
 const Profile = () => {
     const { user } = useSelector(state => state.auth);
     const [updateUser, { isLoading, isSuccess, isError, error }] = useUpdateUserMutation();
+    const navigate = useNavigate();
 
     const [name, setName] = useState(user?.name || "");
     const [bio, setBio] = useState(user?.bio || "");
@@ -56,167 +58,175 @@ const Profile = () => {
     const role = roleConfig[user?.role] || roleConfig["Student"];
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-background">
-            {}
-            <div className="relative h-44 bg-gradient-to-br from-primary via-primary/80 to-purple-700 overflow-hidden">
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:40px_40px]" />
-                <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white/10 blur-3xl" />
-                <div className="absolute bottom-0 left-10 w-48 h-48 rounded-full bg-purple-900/30 blur-3xl" />
+        <div className="min-h-[calc(100vh-64px)] bg-background pb-20">
+            {/* Banner */}
+            <div className="relative h-48 sm:h-56 bg-gradient-to-br from-indigo-600 via-purple-600 to-primary overflow-hidden">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay pointer-events-none" />
+                <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-white/10 blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 left-10 w-64 h-64 rounded-full bg-black/20 blur-3xl pointer-events-none" />
             </div>
 
-            <div className="max-w-5xl mx-auto px-6">
-                {}
-                <div className="flex flex-col sm:flex-row sm:items-end gap-5 -mt-16 mb-8">
-                    <div className="relative shrink-0">
-                        <div className="w-28 h-28 rounded-3xl ring-4 ring-background shadow-2xl overflow-hidden">
-                            <Avatar className="w-full h-full rounded-3xl">
-                                <AvatarImage src={previewUrl} className="object-cover" />
-                                <AvatarFallback className="bg-gradient-to-br from-primary to-purple-600 text-white text-4xl font-black rounded-3xl">
-                                    {user?.name?.charAt(0).toUpperCase() || "U"}
-                                </AvatarFallback>
-                            </Avatar>
-                        </div>
+            <div className="max-w-5xl mx-auto px-6 relative z-10">
+                {/* Header section with Avatar and Name */}
+                <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-end -mt-24 sm:-mt-28 mb-12">
+                    <div className="relative shrink-0 group">
+                        <Avatar className="w-40 h-40 sm:w-48 sm:h-48 border-[6px] border-background shadow-xl rounded-full bg-card">
+                            <AvatarImage src={previewUrl} className="object-cover" />
+                            <AvatarFallback className="bg-gradient-to-br from-muted to-muted/50 text-muted-foreground text-5xl font-black">
+                                {user?.name?.charAt(0).toUpperCase() || "U"}
+                            </AvatarFallback>
+                        </Avatar>
                         <button
                             onClick={() => fileRef.current?.click()}
-                            className="absolute -bottom-2 -right-2 w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/30 hover:bg-primary/90 hover:scale-105 transition-all duration-200 border-2 border-background"
+                            className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 hover:scale-105 transition-all duration-200 border-4 border-background"
+                            title="Update Profile Photo"
                         >
-                            <Camera size={15} className="text-white" />
+                            <Camera size={18} className="text-white" />
                         </button>
                         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
                     </div>
-                    <div className="pb-2">
-                        <h1 className="text-2xl font-black text-foreground">{user?.name}</h1>
-                        <p className="text-muted-foreground text-sm font-medium">{user?.email}</p>
-                        <span className={`inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full text-xs font-bold border ${role.bg} ${role.text}`}>
-                            {role.icon} {user?.role}
-                        </span>
-                        {user && (
-                            <Button 
-                                onClick={() => window.open(`/u/${user._id}`, '_blank')} 
-                                variant="outline" 
-                                size="sm" 
-                                className="mt-4 ml-4 rounded-full font-bold border-primary/30 hover:bg-primary/5 hover:text-primary transition-colors text-xs"
-                            >
-                                View Public Portfolio
-                            </Button>
-                        )}
+                    
+                    <div className="flex-1 pb-2 sm:pb-4 w-full text-center sm:text-left">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div>
+                                <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight mb-1">{user?.name}</h1>
+                                <p className="text-muted-foreground font-medium text-lg">{user?.email}</p>
+                                <div className="flex items-center justify-center sm:justify-start gap-3 mt-3">
+                                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${role.bg} ${role.text}`}>
+                                        {role.icon} {user?.role}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            {user && (
+                                <Button 
+                                    onClick={() => navigate(`/u/${user._id}`)} 
+                                    className="rounded-full font-bold shadow-md shadow-primary/20 hover:-translate-y-0.5 transition-all btn-primary-gradient text-white border-0 px-6 h-11 flex items-center gap-2"
+                                >
+                                    <ExternalLink size={16} /> View Public Portfolio
+                                </Button>
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                <div className="grid lg:grid-cols-3 gap-6 pb-16">
-                    {}
-                    <div className="space-y-4">
-                        {}
-                        <div className="rounded-2xl border border-border/60 bg-card p-6 space-y-4">
-                            <h3 className="font-bold text-sm text-muted-foreground uppercase tracking-wider">Your Progress</h3>
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-4 text-center border border-primary/15">
-                                    <BookOpen size={20} className="mx-auto mb-2 text-primary" />
-                                    <p className="text-2xl font-black text-foreground">{user?.enrolledCourses?.length || 0}</p>
-                                    <p className="text-xs text-muted-foreground font-semibold mt-1">Enrolled</p>
+                <div className="grid lg:grid-cols-3 gap-8">
+                    {/* Left Column: Stats & Account */}
+                    <div className="space-y-6">
+                        <div className="rounded-3xl border border-border/60 bg-card p-7 shadow-sm">
+                            <h3 className="font-black text-sm text-muted-foreground uppercase tracking-wider mb-5 flex items-center gap-2">
+                                <Award size={16} /> Your Progress
+                            </h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl p-5 text-center border border-primary/15 hover:border-primary/30 transition-colors">
+                                    <BookOpen size={24} className="mx-auto mb-3 text-primary" />
+                                    <p className="text-3xl font-black text-foreground mb-1">{user?.enrolledCourses?.length || 0}</p>
+                                    <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider">Enrolled</p>
                                 </div>
-                                <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-xl p-4 text-center border border-emerald-500/15">
-                                    <Award size={20} className="mx-auto mb-2 text-emerald-600 dark:text-emerald-400" />
-                                    <p className="text-2xl font-black text-foreground">{user?.completedCoursesCount || 0}</p>
-                                    <p className="text-xs text-muted-foreground font-semibold mt-1">Completed</p>
+                                <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-2xl p-5 text-center border border-emerald-500/15 hover:border-emerald-500/30 transition-colors">
+                                    <Award size={24} className="mx-auto mb-3 text-emerald-600 dark:text-emerald-400" />
+                                    <p className="text-3xl font-black text-foreground mb-1">{user?.completedCoursesCount || 0}</p>
+                                    <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider">Completed</p>
                                 </div>
                             </div>
                         </div>
 
-                        {}
-                        <div className="rounded-2xl border border-border/60 bg-card p-5 space-y-3">
-                            <h3 className="font-bold text-sm text-muted-foreground uppercase tracking-wider">Account</h3>
-                            <div className="flex items-center gap-3 py-2">
-                                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
-                                    <Shield size={14} className="text-muted-foreground" />
+                        <div className="rounded-3xl border border-border/60 bg-card p-7 shadow-sm">
+                            <h3 className="font-black text-sm text-muted-foreground uppercase tracking-wider mb-5 flex items-center gap-2">
+                                <Shield size={16} /> Account Details
+                            </h3>
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
+                                        <Shield size={16} className="text-muted-foreground" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-0.5">Role</p>
+                                        <p className="text-sm font-black text-foreground">{user?.role}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="text-xs text-muted-foreground">Role</p>
-                                    <p className="text-sm font-bold">{user?.role}</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3 py-2">
-                                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
-                                    <Mail size={14} className="text-muted-foreground" />
-                                </div>
-                                <div className="min-w-0">
-                                    <p className="text-xs text-muted-foreground">Email</p>
-                                    <p className="text-sm font-bold truncate">{user?.email}</p>
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
+                                        <Mail size={16} className="text-muted-foreground" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-0.5">Email</p>
+                                        <p className="text-sm font-bold text-foreground truncate">{user?.email}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {}
-                    <div className="lg:col-span-2 space-y-5">
-                        <div className="rounded-2xl border border-border/60 bg-card overflow-hidden">
-                            <div className="px-6 py-5 border-b border-border/60 bg-muted/30">
-                                <div className="flex items-center gap-2.5">
-                                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                                        <Edit3 size={15} className="text-primary" />
+                    {/* Right Column: Edit Form & Enrolled Courses */}
+                    <div className="lg:col-span-2 space-y-6">
+                        <div className="rounded-3xl border border-border/60 bg-card overflow-hidden shadow-sm">
+                            <div className="px-8 py-6 border-b border-border/60 bg-muted/20">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                        <Edit3 size={18} className="text-primary" />
                                     </div>
-                                    <h2 className="font-bold text-foreground">Edit Profile</h2>
+                                    <h2 className="text-xl font-black text-foreground">Edit Profile</h2>
                                 </div>
                             </div>
-                            <div className="p-6 space-y-5">
-                                <div className="space-y-2">
-                                    <Label htmlFor="profile-name" className="text-sm font-bold">Full Name</Label>
+                            <div className="p-8 space-y-6">
+                                <div className="space-y-3">
+                                    <Label htmlFor="profile-name" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Full Name</Label>
                                     <Input
                                         id="profile-name"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         placeholder="Your full name"
-                                        className="h-12 rounded-xl border-border bg-muted/30 focus:bg-background focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                                        className="h-12 rounded-xl border-border bg-background focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-semibold"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="profile-bio" className="text-sm font-bold">Bio</Label>
+                                <div className="space-y-3">
+                                    <Label htmlFor="profile-bio" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Bio</Label>
                                     <textarea
                                         id="profile-bio"
                                         value={bio}
                                         onChange={(e) => setBio(e.target.value)}
                                         placeholder="Tell us about yourself — your background, skills, and goals..."
                                         rows={4}
-                                        className="w-full px-4 py-3.5 rounded-xl border border-border bg-muted/30 focus:bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none transition-all font-medium placeholder:text-muted-foreground/60 text-foreground"
+                                        className="w-full px-4 py-3.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none transition-all font-medium placeholder:text-muted-foreground/60 text-foreground"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-sm font-bold">Email Address</Label>
+                                <div className="space-y-3">
+                                    <Label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Email Address</Label>
                                     <div className="relative">
-                                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                         <Input
                                             value={user?.email || ""}
                                             disabled
                                             className="h-12 rounded-xl pl-11 bg-muted/50 text-muted-foreground border-border/60 cursor-not-allowed font-medium"
                                         />
                                     </div>
-                                    <p className="text-xs text-muted-foreground">Email cannot be changed for security reasons</p>
+                                    <p className="text-xs font-semibold text-muted-foreground">Email cannot be changed for security reasons</p>
                                 </div>
                                 <Button
                                     onClick={handleSubmit}
                                     disabled={isLoading}
-                                    className="w-full h-12 rounded-xl btn-primary-gradient text-white font-bold border-0 mt-2"
+                                    className="w-full h-12 rounded-xl btn-primary-gradient text-white font-bold border-0 mt-4 text-[15px] hover:-translate-y-0.5 transition-transform"
                                 >
                                     {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving changes...</> : "Save Changes"}
                                 </Button>
                             </div>
                         </div>
 
-                        {}
                         {user?.enrolledCourses?.length > 0 && (
-                            <div className="rounded-2xl border border-border/60 bg-card overflow-hidden">
-                                <div className="px-6 py-5 border-b border-border/60 bg-muted/30">
-                                    <div className="flex items-center gap-2.5">
-                                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                                            <BookOpen size={15} className="text-primary" />
+                            <div className="rounded-3xl border border-border/60 bg-card overflow-hidden shadow-sm">
+                                <div className="px-8 py-6 border-b border-border/60 bg-muted/20">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                            <BookOpen size={18} className="text-primary" />
                                         </div>
-                                        <h2 className="font-bold text-foreground">Enrolled Courses</h2>
-                                        <span className="ml-auto text-xs font-bold bg-primary/10 text-primary px-2.5 py-1 rounded-full">
+                                        <h2 className="text-xl font-black text-foreground">Enrolled Courses</h2>
+                                        <span className="ml-auto text-xs font-black bg-primary text-white px-3 py-1 rounded-full shadow-sm shadow-primary/20">
                                             {user.enrolledCourses.length}
                                         </span>
                                     </div>
                                 </div>
-                                <div className="p-4 space-y-3">
+                                <div className="p-6 space-y-4">
                                     {user.enrolledCourses.map(course => (
                                         <Course key={course._id} course={course} />
                                     ))}
@@ -231,3 +241,4 @@ const Profile = () => {
 }
 
 export default Profile;
+
