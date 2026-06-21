@@ -2,10 +2,12 @@ import { Button } from "@/components/ui/button"
 import { useCreateCheckoutSessionMutation } from "@/features/api/purchaseApi"
 import { Loader2, ShoppingCart } from "lucide-react"
 import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
 const BuyCourseButton = ({ courseId, course }) => {
     const [createCheckoutSession, { data, isLoading, isSuccess, isError, error }] = useCreateCheckoutSessionMutation();
+    const navigate = useNavigate();
 
     const isFree = course?.price === 0 || !course?.price;
 
@@ -15,14 +17,14 @@ const BuyCourseButton = ({ courseId, course }) => {
 
     useEffect(() => {
         if (isSuccess) {
-            
+            // Paid course: redirect to Stripe checkout (full reload is required for external URL)
             if (data?.url) {
                 window.location.href = data.url;
                 return;
             }
-            
+            // Free course: use react-router navigate to avoid full reload and preserve auth state
             toast.success(data?.message || "Successfully enrolled!");
-            window.location.href = `/course-progress/${data?.courseId || courseId}`;
+            navigate(`/course-progress/${data?.courseId || courseId}`);
         }
         if (isError) {
             toast.error(error?.data?.message || "Failed to process enrollment");

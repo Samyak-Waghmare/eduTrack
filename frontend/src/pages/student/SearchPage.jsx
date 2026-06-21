@@ -255,8 +255,7 @@ const SearchPage = () => {
                                 <BookOpen size={28} className="text-destructive" />
                             </div>
                             <p className="font-black text-xl text-foreground mb-2">Error Loading Courses</p>
-                            <p className="text-sm font-medium text-muted-foreground">{error?.data?.message || error?.error || "Unknown error occurred"}</p>
-                            <p className="text-xs mt-2 text-muted-foreground/50">{JSON.stringify(error)}</p>
+                            <p className="text-sm font-medium text-muted-foreground">{error?.data?.message || error?.error || "Something went wrong. Please try again."}</p>
                         </div>
                     ) : isLoading ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
