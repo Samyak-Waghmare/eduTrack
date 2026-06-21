@@ -1,5 +1,6 @@
 import express from "express";
 import isAuthenticated from "../middleware/isAuthenticated.js";
+import isOptionalAuthenticated from "../middleware/isOptionalAuthenticated.js";
 import {
     createCheckoutSession,
     verifyPaymentSession,
@@ -12,7 +13,7 @@ const router = express.Router();
 
 router.route("/checkout/create-checkout-session").post(isAuthenticated, createCheckoutSession);
 router.route("/verify").post(isAuthenticated, verifyPaymentSession);
-router.route("/course/:courseId/detail-with-status").get(isAuthenticated, getCourseDetailWithPurchaseStatus);
+router.route("/course/:courseId/detail-with-status").get(isOptionalAuthenticated, getCourseDetailWithPurchaseStatus);
 router.route("/").get(isAuthenticated, getAllPurchasedCourse);
 router.route("/my-courses").get(isAuthenticated, getMyPurchasedCourses);
 

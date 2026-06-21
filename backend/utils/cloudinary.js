@@ -1,5 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
+import fs from "fs";
+
 dotenv.config({});
 
 cloudinary.config({
@@ -29,8 +31,13 @@ export const uploadMedia = async (file) => {
             uploadResponse.hlsUrl = uploadResponse.eager[0].secure_url;
         }
         
+        fs.unlink(file, (err) => {
+            if (err) console.error("Failed to delete local file:", err);
+        });
+
         return uploadResponse;
     } catch (error) {
+        fs.unlink(file, () => {});
         throw error;
     }
 };
@@ -40,8 +47,14 @@ export const uploadRawMedia = async (file) => {
         const uploadResponse = await cloudinary.uploader.upload(file, {
             resource_type: "raw",
         });
+        
+        fs.unlink(file, (err) => {
+            if (err) console.error("Failed to delete local file:", err);
+        });
+
         return uploadResponse;
     } catch (error) {
+        fs.unlink(file, () => {});
         throw error;
     }
 };

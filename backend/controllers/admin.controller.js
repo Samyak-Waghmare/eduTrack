@@ -9,7 +9,7 @@ export const getAllUsers = async (req, res) => {
         const skip = (page - 1) * limit;
 
         const totalUsers = await User.countDocuments({});
-        const users = await User.find({}).select("-password").skip(skip).limit(limit);
+        const users = await User.find({}).sort({ createdAt: -1 }).select("-password").skip(skip).limit(limit);
         
         return res.status(200).json({
             success: true,
