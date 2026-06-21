@@ -16,6 +16,8 @@ import FeaturesSection from './pages/student/FeaturesSection'
 import AboutSection from './pages/student/AboutSection'
 import ContactSection from './pages/student/ContactSection'
 import TestimonialSection from './pages/student/TestimonialSection'
+import PrivacyPolicy from './pages/student/PrivacyPolicy'
+import TermsOfService from './pages/student/TermsOfService'
 import Footer from './components/Footer'
 import { ThemeProvider } from './components/ThemeProvider'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -87,6 +89,8 @@ const appRouter = createBrowserRouter([
       },
       { path: "/login", element: <Login /> },
       { path: "/course/search", element: <SearchPage /> },
+      { path: "/privacy-policy", element: <PrivacyPolicy /> },
+      { path: "/terms-of-service", element: <TermsOfService /> },
       {
         path: "/my-learning",
         element: <ProtectedRoute><MyLearning /></ProtectedRoute>
