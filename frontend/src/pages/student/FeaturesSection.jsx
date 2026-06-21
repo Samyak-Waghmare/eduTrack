@@ -53,14 +53,14 @@ const FeaturesSection = () => (
             {/* Header */}
             <div className="text-center mb-16">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold mb-5">
-                    <Zap size={13} className="fill-primary" /> Why EduTrack?
+                    <Zap size={13} className="fill-primary" /> Platform Features
                 </div>
                 <h2 className="text-4xl sm:text-5xl font-black text-foreground tracking-tight mb-4">
                     Everything you need to
-                    <span className="gradient-text"> level up</span>
+                    <span className="gradient-text"> succeed</span>
                 </h2>
                 <p className="text-muted-foreground text-lg max-w-2xl mx-auto font-medium leading-relaxed">
-                    A modern learning platform designed to help you master new skills and advance your career — all in one place.
+                    A comprehensive platform to build technical skills, track your progress, and earn certificates.
                 </p>
             </div>
 

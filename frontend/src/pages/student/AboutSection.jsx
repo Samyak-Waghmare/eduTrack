@@ -23,11 +23,11 @@ const AboutSection = () => (
                     <GraduationCap size={13} /> Our Story
                 </div>
                 <h2 className="text-4xl sm:text-5xl font-black text-foreground tracking-tight mb-4">
-                    Built by learners,
-                    <span className="gradient-text"> for learners</span>
+                    Built for developers,
+                    <span className="gradient-text"> by developers</span>
                 </h2>
                 <p className="text-muted-foreground text-lg max-w-2xl mx-auto font-medium leading-relaxed">
-                    EduTrack was born from a simple frustration — online learning felt disconnected and unmotivating. We set out to build something better.
+                    We built EduTrack to provide practical, high-quality technical education that focuses on real-world skills rather than just theory.
                 </p>
             </div>
 
@@ -37,10 +37,10 @@ const AboutSection = () => (
                 <div>
                     <h3 className="text-2xl font-black text-foreground mb-4">What we stand for</h3>
                     <p className="text-muted-foreground leading-relaxed mb-4 font-medium">
-                        EduTrack is a modern learning management system designed to help students master skills that matter. We believe the best learning happens when content is engaging, progress is visible, and community is at the center.
+                        EduTrack is a modern learning platform designed to help students build practical engineering skills. We focus on providing engaging content, clear progression paths, and a supportive community.
                     </p>
                     <p className="text-muted-foreground leading-relaxed font-medium">
-                        From interactive quizzes and Q&A sections to gamified XP leaderboards and verified certificates, every feature is designed to keep you motivated from first lesson to graduation.
+                        From structured courses and Q&A forums to certification systems, our platform is built to provide a professional educational experience from start to finish.
                     </p>
 
                     {/* Values grid */}

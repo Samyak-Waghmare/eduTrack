@@ -59,13 +59,13 @@ const HeroSection = () => {
                 {}
                 <div className="animate-fade-up [animation-delay:100ms] space-y-4 max-w-[900px]">
                     <h1 className="text-[clamp(2.8rem,7.5vw,5.5rem)] font-black tracking-tight leading-[1.05] text-foreground">
-                        Learn Skills That
+                        Practical courses for
                         <span className="block gradient-text pb-3 mt-1">
-                            Shape Your Future
+                            modern developers
                         </span>
                     </h1>
                     <p className="text-[clamp(1rem,2vw,1.25rem)] text-muted-foreground max-w-[600px] mx-auto leading-relaxed font-medium">
-                        Master in-demand skills with expert-led courses. Join 50,000+ learners already transforming their careers.
+                        Learn software engineering, data science, and design through comprehensive video courses. Join 50,000+ developers building real-world projects.
                     </p>
                 </div>
 
@@ -137,7 +137,7 @@ const HeroSection = () => {
                         ))}
                     </div>
                     <p className="text-sm text-muted-foreground font-medium">
-                        <span className="font-bold text-foreground">2,400+</span> learners joined this week
+                        <span className="font-bold text-foreground">2,400+</span> new students joined this week
                     </p>
                 </div>
             </div>
