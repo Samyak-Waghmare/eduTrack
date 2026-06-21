@@ -73,56 +73,55 @@ const Navbar = () => {
                 </button>
 
                 {/* Nav links */}
-                {isAuthenticated ? (
-                    <div className="flex items-center gap-1">
-                        <Link
-                            to="/course/search"
+                <div className="flex items-center gap-1">
+                    {publicNavLinks.map(({ label, action }) => (
+                        <button
+                            key={label}
+                            onClick={action}
                             className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                                isActive('/course/search')
+                                label === 'Home' && location.pathname === '/'
                                     ? 'bg-primary/10 text-primary'
                                     : 'text-muted-foreground hover:text-foreground hover:bg-accent'
                             }`}
                         >
-                            Browse Courses
+                            {label}
+                        </button>
+                    ))}
+                    <Link
+                        to="/course/search"
+                        className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                            isActive('/course/search')
+                                ? 'bg-primary/10 text-primary'
+                                : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                        }`}
+                    >
+                        Browse Courses
+                    </Link>
+                    {isAuthenticated && user?.role === "Instructor" && (
+                        <Link
+                            to="/instructor"
+                            className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                                location.pathname.startsWith('/instructor')
+                                    ? 'bg-primary/10 text-primary'
+                                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                            }`}
+                        >
+                            Dashboard
                         </Link>
-                        {user?.role === "Instructor" && (
-                            <Link
-                                to="/instructor"
-                                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                                    location.pathname.startsWith('/instructor')
-                                        ? 'bg-primary/10 text-primary'
-                                        : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-                                }`}
-                            >
-                                Dashboard
-                            </Link>
-                        )}
-                        {user?.role === "Admin" && (
-                            <Link
-                                to="/admin/dashboard"
-                                className={`px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200 ${
-                                    location.pathname.startsWith('/admin')
-                                        ? 'bg-primary/10 text-primary'
-                                        : 'text-primary/80 hover:text-primary hover:bg-primary/10'
-                                }`}
-                            >
-                                Admin Panel
-                            </Link>
-                        )}
-                    </div>
-                ) : (
-                    <div className="flex items-center gap-1">
-                        {publicNavLinks.map(({ label, action }) => (
-                            <button
-                                key={label}
-                                onClick={action}
-                                className="px-4 py-2 rounded-xl text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200"
-                            >
-                                {label}
-                            </button>
-                        ))}
-                    </div>
-                )}
+                    )}
+                    {isAuthenticated && user?.role === "Admin" && (
+                        <Link
+                            to="/admin/dashboard"
+                            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200 ${
+                                location.pathname.startsWith('/admin')
+                                    ? 'bg-primary/10 text-primary'
+                                    : 'text-primary/80 hover:text-primary hover:bg-primary/10'
+                            }`}
+                        >
+                            Admin Panel
+                        </Link>
+                    )}
+                </div>
 
                 {}
                 <div className="flex items-center gap-3">
@@ -256,7 +255,23 @@ export default Navbar;
 const MobileNavbar = ({ user, isAuthenticated, onLogout }) => {
     const navigate = useNavigate();
     const location = useLocation();
-    
+    const scrollTo = (id) => {
+        if (location.pathname !== '/') {
+            navigate('/');
+            setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 150);
+        } else {
+            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    const publicLinks = [
+        { label: 'Home', action: () => navigate('/') },
+        { label: 'Features', action: () => scrollTo('features') },
+        { label: 'About', action: () => scrollTo('about') },
+        { label: 'Contact', action: () => scrollTo('contact') },
+        { label: 'Browse Courses', action: () => navigate('/course/search') },
+    ];
+
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -264,8 +279,8 @@ const MobileNavbar = ({ user, isAuthenticated, onLogout }) => {
                     <Menu size={20} />
                 </Button>
             </SheetTrigger>
-            <SheetContent className="w-[300px] p-0 bg-background/98 backdrop-blur-2xl border-l border-border/60">
-                <SheetHeader className="px-6 pt-7 pb-5 border-b border-border/60">
+            <SheetContent className="w-[300px] p-0 bg-background/98 backdrop-blur-2xl border-l border-border/60 overflow-y-auto">
+                <SheetHeader className="px-6 pt-7 pb-5 border-b border-border/60 sticky top-0 bg-background/98 backdrop-blur z-10">
                     <SheetTitle className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-md">
                             <GraduationCap size={18} className="text-white" />
@@ -273,7 +288,24 @@ const MobileNavbar = ({ user, isAuthenticated, onLogout }) => {
                         <span className="font-black text-xl bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">EduTrack</span>
                     </SheetTitle>
                 </SheetHeader>
-                <div className="px-4 py-5">
+                <div className="px-4 py-5 space-y-4">
+                    {/* Public Links */}
+                    <div className="space-y-1">
+                        <p className="px-4 text-xs font-black text-muted-foreground uppercase tracking-widest mb-2">Navigation</p>
+                        {publicLinks.map(({ label, action }) => (
+                            <SheetClose key={label} asChild>
+                                <button
+                                    onClick={action}
+                                    className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-muted-foreground hover:text-primary hover:bg-primary/8 transition-colors"
+                                >
+                                    {label}
+                                </button>
+                            </SheetClose>
+                        ))}
+                    </div>
+                    
+                    <div className="h-px bg-border/60 my-2" />
+
                     {isAuthenticated ? (
                         <>
                             <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-primary/5 to-purple-500/5 border border-border/60 mb-5">
@@ -289,10 +321,10 @@ const MobileNavbar = ({ user, isAuthenticated, onLogout }) => {
                                 </div>
                             </div>
                             <div className="space-y-1">
+                                <p className="px-4 text-xs font-black text-muted-foreground uppercase tracking-widest mb-2">Account</p>
                                 {[
                                     { label: "My Learning", path: "/my-learning" },
                                     { label: "Edit Profile", path: "/profile" },
-                                    { label: "Browse Courses", path: "/course/search" },
                                     ...(user?.role === "Instructor" ? [
                                         { label: "Dashboard", path: "/instructor" },
                                         { label: "Q&A Inbox", path: "/instructor/qa" }
@@ -302,7 +334,7 @@ const MobileNavbar = ({ user, isAuthenticated, onLogout }) => {
                                     <SheetClose key={item.path} asChild>
                                         <button
                                             onClick={() => navigate(item.path)}
-                                            className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                                            className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
                                                 location.pathname === item.path
                                                     ? 'bg-primary/10 text-primary'
                                                     : 'text-muted-foreground hover:text-primary hover:bg-primary/8'
