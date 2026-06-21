@@ -109,9 +109,9 @@ const CourseQA = ({ courseId, lectureId }) => {
                                     <p className="text-xs text-muted-foreground">{new Date(q.createdAt).toLocaleDateString()}</p>
                                 </div>
                             </div>
-                            <p className="text-sm text-foreground/90 pl-13">{q.content}</p>
+                            <p className="text-sm text-foreground/90 pl-12">{q.content}</p>
                             
-                            <div className="pl-13 space-y-4 pt-2">
+                            <div className="pl-12 space-y-4 pt-2">
                                 {q.replies?.map(r => (
                                     <div key={r._id} className="flex gap-3 bg-muted/30 p-3 rounded-xl">
                                         <Avatar className="w-8 h-8">

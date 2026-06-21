@@ -8,7 +8,6 @@ import { Loader2, Camera, BookOpen, Award, Shield, Edit3, Mail, ExternalLink } f
 import { useState, useEffect, useRef } from "react"
 import { toast } from "sonner"
 import { useNavigate } from "react-router-dom"
-import Course from "./Course"
 
 const Profile = () => {
     const { user } = useSelector(state => state.auth);

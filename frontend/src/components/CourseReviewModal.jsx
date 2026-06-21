@@ -34,8 +34,15 @@ const CourseReviewModal = ({ courseId, isOpen, onClose }) => {
         }
     };
 
+    const handleClose = () => {
+        setRating(0);
+        setHover(0);
+        setComment("");
+        onClose();
+    };
+
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
+        <Dialog open={isOpen} onOpenChange={(open) => { if (!open) handleClose(); }}>
             <DialogContent className="sm:max-w-md p-6 rounded-2xl bg-card border-border/60">
                 <DialogHeader className="mb-4">
                     <DialogTitle className="text-2xl font-black text-center text-foreground">

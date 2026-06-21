@@ -155,14 +155,17 @@ const CourseDetail = () => {
                             What You'll Learn
                         </h2>
                         <div className="grid sm:grid-cols-2 gap-3">
-                            {[
-                                "In-demand industry skills",
-                                "Hands-on practical projects",
-                                "Certificate of completion",
-                                "Lifetime access to content",
-                                "Expert instructor support",
-                                "Real-world applications",
-                            ].map(item => (
+                            {(course.lectures?.length > 0
+                                ? course.lectures.slice(0, 6).map(l => l.lectureTitle)
+                                : [
+                                    "In-demand industry skills",
+                                    "Hands-on practical projects",
+                                    "Certificate of completion",
+                                    "Lifetime access to content",
+                                    "Expert instructor support",
+                                    "Real-world applications",
+                                ]
+                            ).map(item => (
                                 <div key={item} className="flex items-start gap-3">
                                     <CheckCircle size={16} className="text-emerald-500 mt-0.5 shrink-0" />
                                     <span className="text-sm text-foreground font-medium">{item}</span>
@@ -239,12 +242,6 @@ const CourseDetail = () => {
                                 <span className="text-3xl font-black text-foreground">
                                     {course.price === 0 || !course.price ? "Free" : `₹${course.price}`}
                                 </span>
-                                {course.price > 0 && (
-                                    <span className="text-sm text-muted-foreground line-through">₹{Math.round(course.price * 1.5)}</span>
-                                )}
-                                {course.price > 0 && (
-                                    <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">33% OFF</span>
-                                )}
                             </div>
 
                             {}
