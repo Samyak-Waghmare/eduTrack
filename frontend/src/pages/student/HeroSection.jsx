@@ -59,9 +59,9 @@ const HeroSection = () => {
                 {}
                 <div className="animate-fade-up [animation-delay:100ms] space-y-4 max-w-[900px]">
                     <h1 className="text-[clamp(2.8rem,7.5vw,5.5rem)] font-black tracking-tight leading-[1.05] text-foreground">
-                        Practical courses for
+                        Learn to Code With
                         <span className="block gradient-text pb-3 mt-1">
-                            modern developers
+                            Real-World Projects
                         </span>
                     </h1>
                     <p className="text-[clamp(1rem,2vw,1.25rem)] text-muted-foreground max-w-[600px] mx-auto leading-relaxed font-medium">
