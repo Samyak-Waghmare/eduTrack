@@ -4,181 +4,136 @@ import { useGetCourseProgressQuery } from "@/features/api/courseProgressApi"
 import { Button } from "@/components/ui/button"
 import { Award, ArrowLeft, Download, Loader2, Lock, Sparkles } from "lucide-react"
 import { useState } from "react"
-import { pdf, Document, Page, View, Text, StyleSheet } from "@react-pdf/renderer"
+import jsPDF from "jspdf"
 
-// ─── PDF styles (react-pdf uses pt units) ───────────────────────────────────
-const S = StyleSheet.create({
-    page: {
-        backgroundColor: "#ffffff",
-        padding: 0,
-        fontFamily: "Helvetica",
-    },
-    border: {
-        position: "absolute",
-        top: 16, left: 16, right: 16, bottom: 16,
-        border: "6pt double #0f172a",
-    },
-    cornerTL: {
-        position: "absolute", top: 0, left: 0,
-        width: 140, height: 140,
-        backgroundColor: "rgba(124,58,237,0.06)",
-        borderBottomRightRadius: 140,
-    },
-    cornerBR: {
-        position: "absolute", bottom: 0, right: 0,
-        width: 140, height: 140,
-        backgroundColor: "rgba(14,165,233,0.06)",
-        borderTopLeftRadius: 140,
-    },
-    content: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        paddingHorizontal: 60,
-        paddingVertical: 30,
-    },
-    logoBox: {
-        width: 44, height: 44,
-        backgroundColor: "#0f172a",
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: 4,
-    },
-    logoText: {
-        fontSize: 18, fontFamily: "Helvetica-Bold",
-        color: "#0f172a", letterSpacing: 0,
-    },
-    subtitle: {
-        fontSize: 8, color: "#64748b",
-        letterSpacing: 3, marginBottom: 16,
-        fontFamily: "Helvetica-Bold",
-        textTransform: "uppercase",
-    },
-    presentedTo: {
-        fontSize: 11, color: "#475569",
-        fontFamily: "Helvetica-Oblique",
-        marginBottom: 8,
-    },
-    studentName: {
-        fontSize: 38, color: "#0f172a",
-        fontFamily: "Helvetica-Bold",
-        marginBottom: 10,
-        textAlign: "center",
-    },
-    bodyText: {
-        fontSize: 10, color: "#475569",
-        textAlign: "center", lineHeight: 1.5,
-        maxWidth: 360,
-    },
-    courseTitle: {
-        fontSize: 17, color: "#7c3aed",
-        fontFamily: "Helvetica-Bold",
-        marginTop: 6, textAlign: "center",
-    },
-    divider: {
-        borderTop: "1.5pt solid #e2e8f0",
-        marginTop: 24, marginBottom: 0,
-        width: "100%",
-    },
-    footer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
-        width: "100%",
-        marginTop: 16,
-    },
-    footerBlock: { alignItems: "center", width: 130 },
-    footerLabel: {
-        fontSize: 7, color: "#64748b",
-        letterSpacing: 2, fontFamily: "Helvetica-Bold",
-        textTransform: "uppercase", marginTop: 4,
-    },
-    footerValue: {
-        fontSize: 11, color: "#0f172a",
-        fontFamily: "Helvetica-Bold",
-        borderBottom: "1pt solid #cbd5e1",
-        paddingBottom: 4, marginBottom: 0,
-    },
-    certId: {
-        fontSize: 7, color: "#94a3b8",
-        letterSpacing: 1.5, fontFamily: "Helvetica",
-        marginTop: 4,
-    },
-    instructorName: {
-        fontSize: 18, color: "#0f172a",
-        fontFamily: "Helvetica-Oblique",
-        borderBottom: "1pt solid #cbd5e1",
-        paddingBottom: 4, marginBottom: 0,
-    },
-    sealCircle: {
-        width: 36, height: 36,
-        borderRadius: 18,
-        backgroundColor: "#fef3c7",
-        border: "1pt solid #fde68a",
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: 4,
-    },
-    sealStar: {
-        fontSize: 14, color: "#f59e0b",
-    },
-});
+// Draws the certificate directly onto a jsPDF canvas — zero DOM/CSS reads,
+// zero oklch, works 100% reliably.
+const drawCertificate = (doc, { studentName, courseTitle, instructor, date, certId }) => {
+    const W = 297, H = 210; // A4 landscape mm
 
-const CertificatePDF = ({ studentName, courseTitle, instructor, date, certId }) => (
-    <Document>
-        <Page size="A4" orientation="landscape" style={S.page}>
-            {/* Corner accents */}
-            <View style={S.cornerTL} />
-            <View style={S.cornerBR} />
+    // White background
+    doc.setFillColor(255, 255, 255);
+    doc.rect(0, 0, W, H, "F");
 
-            {/* Double border */}
-            <View style={S.border} />
+    // Corner accent — top-left purple
+    doc.setFillColor(240, 235, 255);
+    doc.circle(-10, -10, 55, "F");
 
-            {/* Main content */}
-            <View style={S.content}>
-                {/* Logo */}
-                <View style={{ alignItems: "center", marginBottom: 10 }}>
-                    <View style={S.logoBox}>
-                        <Text style={{ color: "#ffffff", fontSize: 18 }}>⬡</Text>
-                    </View>
-                    <Text style={S.logoText}>EduTrack</Text>
-                </View>
+    // Corner accent — bottom-right blue
+    doc.setFillColor(230, 245, 255);
+    doc.circle(W + 10, H + 10, 55, "F");
 
-                <Text style={S.subtitle}>Certificate of Completion</Text>
+    // Outer border
+    doc.setDrawColor(15, 23, 42);
+    doc.setLineWidth(1.2);
+    doc.rect(8, 8, W - 16, H - 16);
+    // Inner border (double effect)
+    doc.setLineWidth(0.4);
+    doc.rect(11, 11, W - 22, H - 22);
 
-                <Text style={S.presentedTo}>This is proudly presented to</Text>
-                <Text style={S.studentName}>{studentName}</Text>
+    // ── Logo box ──────────────────────────────────────────────
+    const cx = W / 2;
+    doc.setFillColor(15, 23, 42);
+    doc.roundedRect(cx - 9, 18, 18, 18, 3, 3, "F");
+    // Award icon "★" inside box
+    doc.setTextColor(248, 250, 252);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("✦", cx, 30, { align: "center" });
 
-                <Text style={S.bodyText}>
-                    for successfully demonstrating exceptional skill and completing the online course
-                </Text>
-                <Text style={S.courseTitle}>{courseTitle}</Text>
+    // Brand name
+    doc.setTextColor(15, 23, 42);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.text("EduTrack", cx, 43, { align: "center" });
 
-                {/* Footer */}
-                <View style={S.divider} />
-                <View style={S.footer}>
-                    <View style={S.footerBlock}>
-                        <Text style={S.footerValue}>{date}</Text>
-                        <Text style={S.footerLabel}>Issue Date</Text>
-                    </View>
+    // ── Certificate of completion ──────────────────────────────
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(100, 116, 139);
+    doc.setCharSpace(3.5);
+    doc.text("CERTIFICATE OF COMPLETION", cx, 52, { align: "center" });
+    doc.setCharSpace(0);
 
-                    <View style={{ alignItems: "center" }}>
-                        <View style={S.sealCircle}>
-                            <Text style={S.sealStar}>★</Text>
-                        </View>
-                        <Text style={S.certId}>{certId}</Text>
-                    </View>
+    // ── Presented to ──────────────────────────────────────────
+    doc.setFont("helvetica", "bolditalic");
+    doc.setFontSize(10);
+    doc.setTextColor(71, 85, 105);
+    doc.text("This is proudly presented to", cx, 62, { align: "center" });
 
-                    <View style={S.footerBlock}>
-                        <Text style={S.instructorName}>{instructor}</Text>
-                        <Text style={S.footerLabel}>Lead Instructor</Text>
-                    </View>
-                </View>
-            </View>
-        </Page>
-    </Document>
-);
+    // ── Student name ──────────────────────────────────────────
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(34);
+    doc.setTextColor(15, 23, 42);
+    doc.text(studentName, cx, 82, { align: "center" });
+
+    // ── Body text ─────────────────────────────────────────────
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9.5);
+    doc.setTextColor(71, 85, 105);
+    doc.text(
+        "for successfully demonstrating exceptional skill and completing the online course",
+        cx, 93, { align: "center" }
+    );
+
+    // ── Course title ──────────────────────────────────────────
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(15);
+    doc.setTextColor(124, 58, 237);
+    doc.text(courseTitle, cx, 105, { align: "center", maxWidth: 200 });
+
+    // ── Divider ───────────────────────────────────────────────
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.6);
+    doc.line(30, 120, W - 30, 120);
+
+    // ── Footer: Issue Date ────────────────────────────────────
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(15, 23, 42);
+    doc.text(date, 65, 134, { align: "center" });
+    doc.setDrawColor(203, 213, 225);
+    doc.setLineWidth(0.4);
+    doc.line(35, 137, 95, 137);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.5);
+    doc.setTextColor(100, 116, 139);
+    doc.setCharSpace(2);
+    doc.text("ISSUE DATE", 65, 142, { align: "center" });
+    doc.setCharSpace(0);
+
+    // ── Footer: Cert ID (center) ──────────────────────────────
+    // Seal circle
+    doc.setFillColor(254, 243, 199);
+    doc.circle(cx, 132, 7, "F");
+    doc.setDrawColor(253, 230, 138);
+    doc.setLineWidth(0.4);
+    doc.circle(cx, 132, 7);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(245, 158, 11);
+    doc.text("★", cx, 134.5, { align: "center" });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.5);
+    doc.setTextColor(148, 163, 184);
+    doc.text(certId, cx, 143, { align: "center" });
+
+    // ── Footer: Instructor ────────────────────────────────────
+    doc.setFont("helvetica", "bolditalic");
+    doc.setFontSize(16);
+    doc.setTextColor(15, 23, 42);
+    doc.text(instructor, W - 65, 134, { align: "center" });
+    doc.setDrawColor(203, 213, 225);
+    doc.setLineWidth(0.4);
+    doc.line(W - 95, 137, W - 35, 137);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.5);
+    doc.setTextColor(100, 116, 139);
+    doc.setCharSpace(2);
+    doc.text("LEAD INSTRUCTOR", W - 65, 142, { align: "center" });
+    doc.setCharSpace(0);
+};
 
 // ─── Main page component ─────────────────────────────────────────────────────
 const Certificate = () => {
@@ -223,24 +178,12 @@ const Certificate = () => {
     const date = new Date().toLocaleDateString("en-IN", { year: "numeric", month: "long", day: "numeric" });
     const certId = `EDU-${(courseId || "").slice(-6).toUpperCase()}-${(user?._id || "").slice(-6).toUpperCase()}`;
 
-    const handleDownload = async () => {
+    const handleDownload = () => {
         setDownloading(true);
         try {
-            const blob = await pdf(
-                <CertificatePDF
-                    studentName={studentName}
-                    courseTitle={courseTitle}
-                    instructor={instructor}
-                    date={date}
-                    certId={certId}
-                />
-            ).toBlob();
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `${studentName.replace(/\s+/g, "_")}_Certificate.pdf`;
-            a.click();
-            URL.revokeObjectURL(url);
+            const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+            drawCertificate(doc, { studentName, courseTitle, instructor, date, certId });
+            doc.save(`${studentName.replace(/\s+/g, "_")}_Certificate.pdf`);
         } catch (e) {
             console.error("PDF generation failed", e);
         } finally {
@@ -261,26 +204,18 @@ const Certificate = () => {
                     className="gap-2 rounded-xl h-11 font-bold btn-primary-gradient text-white border-0 shadow-md shadow-primary/20 hover:-translate-y-0.5 transition-all"
                 >
                     {downloading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
-                    {downloading ? "Generating PDF..." : "Download PDF"}
+                    {downloading ? "Generating..." : "Download PDF"}
                 </Button>
             </div>
 
-            {/* Visual preview (screen only) */}
+            {/* Visual preview (screen only — pure inline styles, no Tailwind) */}
             <div className="max-w-[900px] mx-auto">
-                <div
-                    style={{
-                        position: "relative",
-                        backgroundColor: "#ffffff",
-                        color: "#1e293b",
-                        overflow: "hidden",
-                        aspectRatio: "1.414/1",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        border: "12px double #0f172a",
-                        boxShadow: "0 20px 60px rgba(0,0,0,0.12)",
-                    }}
-                >
+                <div style={{
+                    position: "relative", backgroundColor: "#ffffff", color: "#1e293b",
+                    overflow: "hidden", aspectRatio: "1.414/1", display: "flex",
+                    flexDirection: "column", justifyContent: "center",
+                    border: "12px double #0f172a", boxShadow: "0 20px 60px rgba(0,0,0,0.12)",
+                }}>
                     <div style={{ position:"absolute", top:0, left:0, width:192, height:192, background:"radial-gradient(circle at top left, rgba(124,58,237,0.08), transparent 70%)", pointerEvents:"none" }} />
                     <div style={{ position:"absolute", bottom:0, right:0, width:192, height:192, background:"radial-gradient(circle at bottom right, rgba(14,165,233,0.08), transparent 70%)", pointerEvents:"none" }} />
 
@@ -291,11 +226,9 @@ const Certificate = () => {
                             </div>
                             <span style={{ fontWeight:900, fontSize:22, letterSpacing:"-0.05em", color:"#0f172a" }}>EduTrack</span>
                         </div>
-
                         <p style={{ textTransform:"uppercase", letterSpacing:"0.4em", fontSize:13, color:"#64748b", fontWeight:700, marginBottom:24 }}>Certificate of Completion</p>
                         <p style={{ color:"#475569", fontSize:15, fontStyle:"italic", fontWeight:500 }}>This is proudly presented to</p>
                         <h1 style={{ fontSize:52, fontWeight:900, margin:"16px 0", color:"#0f172a", letterSpacing:"-0.03em", fontFamily:"Georgia, serif" }}>{studentName}</h1>
-
                         <p style={{ color:"#475569", fontSize:15, maxWidth:560, margin:"12px auto 0", fontWeight:500, lineHeight:1.6 }}>
                             for successfully demonstrating exceptional skill and completing the online course
                         </p>
