@@ -7,7 +7,7 @@ const Footer = () => {
     const scrollTo = (id) => {
         if (window.location.pathname !== '/') {
             navigate('/');
-            setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 150);
+            setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 400);
         } else {
             document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
         }

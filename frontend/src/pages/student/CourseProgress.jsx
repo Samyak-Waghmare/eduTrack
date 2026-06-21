@@ -205,7 +205,7 @@ const CourseProgress = () => {
                                 <div className="p-6 bg-muted/20 border border-border/60 rounded-2xl mb-8">
                                     <h3 className="font-bold text-foreground mb-2">About this lecture</h3>
                                     <p className="text-muted-foreground leading-relaxed text-sm">
-                                        Welcome to {currentLecture?.lectureTitle}. In this lesson, we will cover the foundational concepts related to the topic. Please watch the entire video and feel free to ask questions in the Q&A tab if you get stuck. After finishing, test your knowledge in the Interactive Quiz tab!
+                                        {currentLecture?.description || `Watch the full video for "${currentLecture?.lectureTitle}" and feel free to ask questions in the Q&A tab if you get stuck. After finishing, test your knowledge in the Interactive Quiz tab.`}
                                     </p>
                                 </div>
 

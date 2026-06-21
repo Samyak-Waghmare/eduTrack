@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Award, ArrowLeft, Download, Loader2, Lock, Sparkles } from "lucide-react"
 import { useState } from "react"
 import jsPDF from "jspdf"
+import { toast } from "sonner"
 
 // Draws the certificate directly onto a jsPDF canvas — zero DOM/CSS reads,
 // zero oklch, works 100% reliably.
@@ -185,7 +186,7 @@ const Certificate = () => {
             drawCertificate(doc, { studentName, courseTitle, instructor, date, certId });
             doc.save(`${studentName.replace(/\s+/g, "_")}_Certificate.pdf`);
         } catch (e) {
-            console.error("PDF generation failed", e);
+            toast.error("Failed to generate PDF. Please try again.");
         } finally {
             setDownloading(false);
         }

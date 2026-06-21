@@ -20,7 +20,7 @@ const Leaderboard = () => {
     const others = leaderboard.slice(3);
 
     return (
-        <div className="min-h-screen bg-background pt-24 pb-20 px-4">
+        <div className="min-h-screen bg-background py-12 pb-20 px-4">
             <div className="max-w-4xl mx-auto">
                 
                 <div className="text-center mb-16">

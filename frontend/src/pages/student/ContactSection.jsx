@@ -75,7 +75,7 @@ const ContactSection = () => {
                                             required
                                             value={form.name}
                                             onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                                            placeholder="Samyak Waghmare"
+                                            placeholder="Your full name"
                                             className="w-full h-11 px-4 rounded-xl bg-background border border-border/60 text-foreground placeholder:text-muted-foreground/50 text-sm font-medium focus:outline-none focus:border-primary/50 transition-colors"
                                         />
                                     </div>
