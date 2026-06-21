@@ -15,6 +15,7 @@ import Leaderboard from './pages/student/Leaderboard'
 import FeaturesSection from './pages/student/FeaturesSection'
 import AboutSection from './pages/student/AboutSection'
 import ContactSection from './pages/student/ContactSection'
+import TestimonialSection from './pages/student/TestimonialSection'
 import Footer from './components/Footer'
 import { ThemeProvider } from './components/ThemeProvider'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -78,6 +79,7 @@ const appRouter = createBrowserRouter([
             <HeroSection />
             <FeaturesSection />
             <Courses />
+            <TestimonialSection />
             <AboutSection />
             <ContactSection />
           </>
